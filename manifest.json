@@ -11,8 +11,12 @@
     ],
     "web_accessible_resources": [
         {
-            "resources": [ "*.png" ],
+            "resources": [ "artreadericon.png" ],
             "matches": [ "<all_urls>" ]
         }
-    ]
+    ],
+    "action": {
+      "default_icon": "babysfirsticon.png",
+      "default_popup": "index.html"
+    }
   }
