@@ -1,4 +1,17 @@
-
+let abbreviationsArr = [
+    'MR.',
+    'DR.',
+    'SR.',
+    'JR.',
+    'MRS.',
+    'MS.',
+    'U.S.',
+    'U.S.A.',
+    'BLVD.',
+    'AVE.',
+    'RD.',
+    'CPT.'
+]
 
 //for all the Ps - possibly needs some more work to clean Ps if not in article text
 function getAllThePs() {
@@ -30,19 +43,33 @@ function getTextFromArticle (arr) {
 
 
 function identifyQuotes (str) {
-    let quoter = /["“].+?[^\s\n\r]["”]/gm;
+    let quoter = /["“].+?["”]/gm;
     const quotes = str.match(quoter);
     console.log(quotes);
 }
 
-function removeLineBreaks(arr) {
-    const noLineBreaks = arr.replace(/(?<=[a-z()"'“”?:]+)\.?\s?[()"'“”](\r|\n)/gi, '. ');
+function removeLineBreaks(str) {
+    const noLineBreaks = str.replace(/(?<=[a-z()"'“”?:]+)\.?\s?[()"'“”](\r|\n)/gi, '. ');
     ensureSingleSpacing(noLineBreaks);
 };
-
-function ensureSingleSpacing(arr) {
-    const singleSpacing = arr.replace(/\s+/g, ' ');
+//Take away all instances of double (or more) whitespace and replace with single whitespace
+function ensureSingleSpacing(str) {
+    const singleSpacing = str.replace(/\s+/g, ' ');
     console.log(singleSpacing);
+    removeAbbreviations(singleSpacing);
+};
+
+function removeAbbreviations(str) {
+    const dirtyArr = str.split(' ');
+    let cleanArr = [];
+    for (let i = 0; i < dirtyArr.length; ++i) {
+        if (abbreviationsArr.includes(dirtyArr[i].toUpperCase())) {
+            let cleanAbbreviation = dirtyArr[i].replace(/\.+/g, '');
+            cleanArr.push(cleanAbbreviation);
+        } else {
+            cleanArr.push(dirtyArr[i]);
+        };
+    };
 };
 
 function getHTMLFromArticle(arr) {
@@ -96,4 +123,69 @@ if (article === null) {
 console.log(articleText);
 
 
-sideBar.textContent = articleText;
+// sideBar.textContent = articleText;
+
+// create icon image div and img
+const headerDiv = document.createElement('div');
+headerDiv.className = 'header-div';
+
+const mainIcon = document.createElement('img');
+let mainIconUrl = chrome.runtime.getURL('artreadericon.png');
+mainIcon.src = mainIconUrl;
+mainIcon.id = 'main-icon';
+
+headerDiv.appendChild(mainIcon);
+sideBar.appendChild(headerDiv);
+
+// create selection buttons 
+
+const btnMainContainer = document.createElement('div');
+btnMainContainer.className = 'btn-main-container';
+
+const btnContainerLeft = document.createElement('div');
+btnContainerLeft.className = 'btn-container-left';
+const btnContainerRight = document.createElement('div');
+btnContainerRight.className = 'btn-container-right';
+
+const goodBtn = document.createElement('button');
+goodBtn.textContent = 'Good';
+goodBtn.className = '.good-btn';
+
+const timeSpaceBtn = document.createElement('button');
+timeSpaceBtn.textContent = 'Space/Time';
+timeSpaceBtn.className = '.time-space-btn';
+
+const budgetBtn = document.createElement('button');
+budgetBtn.textContent = 'Budget';
+budgetBtn.className = '.budget-btn';
+
+const quoteBtn = document.createElement('button');
+quoteBtn.textContent = 'Quotes';
+quoteBtn.className = '.quote-btn';
+
+const overflowBtn = document.createElement('button');
+overflowBtn.textContent = 'Overflow';
+overflowBtn.className = '.overflow-btn';
+
+const customBtn = document.createElement('button');
+customBtn.textContent = 'Custom';
+customBtn.className = '.custom-btn';
+customBtn.disabled = true;
+
+btnContainerLeft.appendChild(goodBtn);
+btnContainerLeft.appendChild(timeSpaceBtn);
+btnContainerLeft.appendChild(budgetBtn);
+btnContainerRight.appendChild(quoteBtn);
+btnContainerRight.appendChild(overflowBtn);
+btnContainerRight.appendChild(customBtn);
+
+btnMainContainer.appendChild(btnContainerLeft);
+btnMainContainer.appendChild(btnContainerRight);
+
+sideBar.appendChild(btnMainContainer);
+
+//create filter display
+const filterDisplay = document.createElement('div');
+filterDisplay.className = 'filter-display';
+
+sideBar.appendChild(filterDisplay);
