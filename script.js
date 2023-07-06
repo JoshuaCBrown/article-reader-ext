@@ -1,3 +1,5 @@
+//***TO DO*** add '.' for line breaks, have handler that deals with ' . . .' and '....' etc. 
+//***TD*** make acronym finder that finds all acronyms in text by all letters in a word being capitalized 
 let abbreviationsArr = [
     'MR.',
     'DR.',
@@ -10,8 +12,76 @@ let abbreviationsArr = [
     'BLVD.',
     'AVE.',
     'RD.',
-    'CPT.'
-]
+    'CPT.',
+    'DEPT.',
+    'DPT.',
+    'DEP.',
+    'MT.',
+    'CIR.'
+];
+
+let timeIdentifiers = [
+    'Monday',
+    'Mon',
+    'Tuesday',
+    'Tues',
+    'Tue',
+    'Wednesday',
+    'Wed',
+    'Thursday',
+    'Thurs',
+    'Thrs',
+    'Thr',
+    'Friday',
+    'Fri',
+    'Saturday',
+    'Sat',
+    'Sunday',
+    'Sun',
+    'January',
+    'Jan',
+    'February',
+    'Feb',
+    'March',
+    'Mar',
+    'April',
+    'Apr',
+    'May',
+    'June',
+    'Jun',
+    'July',
+    'Jul',
+    'August',
+    'Aug',
+    'September',
+    'Sep',
+    'October',
+    'Oct',
+    'November',
+    'Nov',
+    'December',
+    'Dec',
+    '2020',
+    '2021',
+    '2022',
+    '2023',
+    '2024',
+    '2025',
+    '2026',
+    '2027',
+    '2028',
+    '2029',
+    '2030',
+];
+
+//button style function
+function btnStyler (clickedBtn) {
+    const btnArr = btnMainContainer.querySelectorAll('button');
+    btnArr.forEach((indyBtn) => {
+        indyBtn.classList.remove('pressed');
+    })
+    clickedBtn.className = 'pressed';
+}
 
 //for all the Ps - possibly needs some more work to clean Ps if not in article text
 function getAllThePs() {
@@ -43,7 +113,7 @@ function getTextFromArticle (arr) {
 
 
 function identifyQuotes (str) {
-    let quoter = /["“].+?["”]/gm;
+    let quoter = /["“].+?[\S]["”]/gm;
     const quotes = str.match(quoter);
     console.log(quotes);
 }
@@ -59,28 +129,150 @@ function ensureSingleSpacing(str) {
     removeAbbreviations(singleSpacing);
 };
 
+//remove '.' in common abbreviations that could create sentence fragments and impede functionality 
 function removeAbbreviations(str) {
     const dirtyArr = str.split(' ');
+    let regExVal = /^([a-z]\.)+$/i
     let cleanArr = [];
     for (let i = 0; i < dirtyArr.length; ++i) {
-        if (abbreviationsArr.includes(dirtyArr[i].toUpperCase())) {
+        if (abbreviationsArr.includes(dirtyArr[i].toUpperCase()) || regExVal.test(dirtyArr[i])) {
             let cleanAbbreviation = dirtyArr[i].replace(/\.+/g, '');
             cleanArr.push(cleanAbbreviation);
         } else {
             cleanArr.push(dirtyArr[i]);
         };
     };
+    let cleanStr = cleanArr.join(' ');
+    console.log(cleanStr);
+    removeCharBreakers(cleanStr)
 };
 
-function getHTMLFromArticle(arr) {
-    articleHTML = arr[0].innerHTML;
-    for (let i = 1; i < arr.length; ++i) {
-        articleHTML += arr[i].innerHTML;
+//remove characters that potentially impede functionality
+function removeCharBreakers (str) {
+    let cleanStr = str.replace(/[/;()“"”]+/g, '');
+    makeSentenceArr(cleanStr);
+};
+
+
+function makeSentenceArr(str) {
+    sentenceArr = str.split('. ');
+    makeWordArr(sentenceArr);
+};
+
+function makeWordArr(arr) {
+    for (let i = 0; i < arr.length; ++i) {
+        let oneSentenceArr = arr[i].split(' ');
+        wordsInSentencesArr.push(oneSentenceArr);
     };
+    ofTimeFinder(wordsInSentencesArr);
 };
 
+// ***TO DO *** 
+// function idiomTimeFinder (myArr) {
+//     //'this year' 'next year' 'last week' 'TIMEID' 'this upcoming May'
+// }
+
+function ofTimeFinder (myArr) {
+    let ofArr = [];
+    for (let j = 0; j < myArr.length; ++j) {
+        ofArr[j] = [];
+        for (let i = 0; i < myArr[j].length; ++i) {
+            let currentWord = myArr[j][i].replace(/,/g, '');
+            let character = currentWord.charAt(0);
+            if (isNumber(character)) {
+                while (myArr[j][i+1] === 'of' && (myArr[j][i + 2] != undefined && timeIdentifiers.includes(myArr[j][i + 2]))) {
+                    let nextWord = myArr[j][i+1];
+                    let wordAfterNext = myArr[j][i+2];
+                    currentWord += ' ' + nextWord + ' ' + wordAfterNext;
+                    myArr[j].splice((i+1), 2);
+                    console.log(currentWord);
+                };
+            } else if (isAlpha(character) && timeIdentifiers.includes(currentWord)) {
+                while (myArr[j][i+1] === 'of' && (myArr[j][i + 2] != undefined && isNumber(myArr[j][i + 2]))) {
+                    let nextWord = myArr[j][i+1];
+                    let wordAfterNext = myArr[j][i+2];
+                    currentWord += ' ' + nextWord + ' ' + wordAfterNext;
+                    myArr[j].splice((i+1), 2);
+                    console.log(currentWord);
+                };
+            }
+            ofArr[j][i] = currentWord;
+        };
+    };
+    capFinder(ofArr);
+};
+
+function capFinder (myArr) {
+    for (let j = 0; j < myArr.length; ++j) {
+        capArr[j] = [];
+        for (let i = 0; i < myArr[j].length; ++i) {
+            let currentWord = myArr[j][i].replace(/,/g, '');
+            let character = currentWord.charAt(0);
+            let nextWord;
+            let nextChar;
+        //if the first character of the word is a number 
+        //OR 
+        //if the first character is uppercase letter
+            if (isNumber(character) || isAlpha(character)) {
+        //WHILE
+        //  there is another word in the sentence (the next entry is NOT undefined)
+        //  AND 
+        //      the first character of the next word is a number 
+        //      OR 
+        //      the first character of the next word is an uppercase letter
+                while (myArr[j][i+1] != undefined && (isNumber(myArr[j][i+1].charAt(0)) || isAlpha(myArr[j][i+1].charAt(0)))) {
+                    nextWord = myArr[j][i+1].replace(/,/g, '');
+            //Add nextWord to the currentWord index with a space between
+            //and remove the index of nextWord
+            //e.g. 
+            //currentWord = 'Example' in ['Example', 'Case', 'lowercase']
+            //currentWord = 'Example Case' in ['Example Case', 'lowercase']
+                    currentWord += ' ' + nextWord;
+                    myArr[j].splice((i+1), 1);
+            //testing with console log
+                    console.log(currentWord);
+                };
+            //end of WHILE statement
+            //IF 
+            //  currentWord is not included in array of wordsToExclude 
+            //  AND
+            //  currentWord is not a number (to avoid returning arbitrary numbers as buttons)
+            //  add currentWord to capArray
+                if (!isNumber(currentWord)) {
+                    capArr[j].push(currentWord);
+                };
+            };
+        };
+    };
+    //test in console
+    console.log(capArr);
+    //pass capArray to makeBtns function
+    // makeBtns(capArray);
+};
+
+function isNumber(str) {
+    console.log(/^\d+$/.test(str));
+    return /^\d+$/.test(str);
+};
+
+//tests that first character is uppercase letter
+function isAlpha (ch) {
+    return /^[A-Z]$/.test(ch);
+};
+// function getHTMLFromArticle(arr) {
+//     articleHTML = arr[0].innerHTML;
+//     for (let i = 1; i < arr.length; ++i) {
+//         articleHTML += arr[i].innerHTML;
+//     };
+// };
+
+
+//global variables
 let articleText;
 let articleHTML;
+let sentenceArr = [];
+let wordsInSentencesArr = [];
+let capArr = [];
 
 //create side panel and widget to show/remove side panel
 const sideBar = document.createElement('div');
@@ -149,27 +341,27 @@ btnContainerRight.className = 'btn-container-right';
 
 const goodBtn = document.createElement('button');
 goodBtn.textContent = 'Good';
-goodBtn.className = '.good-btn';
+goodBtn.id = 'good-btn';
 
 const timeSpaceBtn = document.createElement('button');
 timeSpaceBtn.textContent = 'Space/Time';
-timeSpaceBtn.className = '.time-space-btn';
+timeSpaceBtn.id = 'time-space-btn';
 
 const budgetBtn = document.createElement('button');
 budgetBtn.textContent = 'Budget';
-budgetBtn.className = '.budget-btn';
+budgetBtn.id = 'budget-btn';
 
 const quoteBtn = document.createElement('button');
 quoteBtn.textContent = 'Quotes';
-quoteBtn.className = '.quote-btn';
+quoteBtn.id = 'quote-btn';
 
 const overflowBtn = document.createElement('button');
 overflowBtn.textContent = 'Overflow';
-overflowBtn.className = '.overflow-btn';
+overflowBtn.id = 'overflow-btn';
 
 const customBtn = document.createElement('button');
 customBtn.textContent = 'Custom';
-customBtn.className = '.custom-btn';
+customBtn.id = 'custom-btn';
 customBtn.disabled = true;
 
 btnContainerLeft.appendChild(goodBtn);
@@ -189,3 +381,11 @@ const filterDisplay = document.createElement('div');
 filterDisplay.className = 'filter-display';
 
 sideBar.appendChild(filterDisplay);
+
+btnMainContainer.addEventListener('click', (e) => {
+    if (e.target.type === 'submit') {
+        btnStyler(e.target)
+    };
+    console.log(e.target.className);
+});
+
