@@ -1,6 +1,6 @@
-#side-container div {
-    /* border: 2px orange solid; */
-}
+/* #side-container div {
+    border: 2px orange solid;
+} */
 
 .popup {
     height: 50px;
@@ -116,3 +116,7 @@
     background: white;
 }
 
+.filter-display button {
+    border: 2px solid black;
+    background: orange;
+}
