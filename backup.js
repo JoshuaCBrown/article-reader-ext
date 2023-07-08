@@ -315,7 +315,7 @@ let moneyIdentifier = [
 
 //button style function
 function btnStyler (clickedBtn) {
-    const btnArr = btnMainArContainer.querySelectorAll('div');
+    const btnArr = btnMainContainer.querySelectorAll('button');
     btnArr.forEach((indyBtn) => {
         indyBtn.classList.remove('pressed');
     })
@@ -615,11 +615,11 @@ function organizeResults(myBtn) {
     removeShownBtns();
     console.log('heyo');
     controlPanelArr = [
-        goodArtReBtn,
-        spaceTimeArtReBtn,
-        budgetArtReBtn,
-        quoteArtReBtn,
-        overflowArtReBtn
+        goodBtn,
+        spacetimeBtn,
+        budgetBtn,
+        quoteBtn,
+        overflowBtn
     ];
     const sigStrBtns = document.querySelectorAll('.sig-str-btn');
     const goodStrBtns = document.querySelectorAll('.good-str-btn');
@@ -672,18 +672,18 @@ let controlPanelArr = [];
 
 //create side panel and widget to show/remove side panel
 const sideBar = document.createElement('div');
-sideBar.id = 'side-artre-container';
+sideBar.id = 'side-container';
 document.body.appendChild(sideBar);
 
-const myArtReIcon = document.createElement('img');
-let iconUrl = chrome.runtime.getURL('imgs/artreadericon.png');
-myArtReIcon.src = iconUrl;
-myArtReIcon.id = 'icon';
+const myIcon = document.createElement('img');
+let iconUrl = chrome.runtime.getURL('artreadericon.png');
+myIcon.src = iconUrl;
+myIcon.id = 'icon';
 
 const myWidget = document.createElement('div');
 myWidget.id = 'stickything';
 
-myWidget.appendChild(myArtReIcon);
+myWidget.appendChild(myIcon);
 
 //event listener on tab click to show side panel
 myWidget.addEventListener('click', () => {
@@ -713,7 +713,7 @@ const headerDiv = document.createElement('div');
 headerDiv.className = 'header-div';
 
 const mainIcon = document.createElement('img');
-let mainIconUrl = chrome.runtime.getURL('imgs/artreadericon.png');
+let mainIconUrl = chrome.runtime.getURL('artreadericon.png');
 mainIcon.src = mainIconUrl;
 mainIcon.id = 'main-icon';
 
@@ -722,96 +722,50 @@ sideBar.appendChild(headerDiv);
 
 // create selection buttons 
 
-const btnMainArContainer = document.createElement('div');
-btnMainArContainer.id = 'btn-main-ar-container';
+const btnMainContainer = document.createElement('div');
+btnMainContainer.className = 'btn-main-container';
 
-// const btnContainerLeft = document.createElement('div');
-// btnContainerLeft.className = 'btn-container-left';
-// const btnContainerRight = document.createElement('div');
-// btnContainerRight.className = 'btn-container-right';
+const btnContainerLeft = document.createElement('div');
+btnContainerLeft.className = 'btn-container-left';
+const btnContainerRight = document.createElement('div');
+btnContainerRight.className = 'btn-container-right';
 
-const goodArtReBtn = document.createElement('div');
-goodArtReBtn.id = 'good-ar-btn';
-const goodBtnIcon = document.createElement('img');
-let goodBtnIconUrl = chrome.runtime.getURL('imgs/check-b3.png');
-goodBtnIcon.src = goodBtnIconUrl;
-goodBtnIcon.id = 'good-btn-icon'
-goodArtReBtn.appendChild(goodBtnIcon);
+const goodBtn = document.createElement('button');
+goodBtn.textContent = 'Good';
+goodBtn.id = 'good-btn';
 
-btnMainArContainer.appendChild(goodArtReBtn);
+const spacetimeBtn = document.createElement('button');
+spacetimeBtn.textContent = 'Space/Time';
+spacetimeBtn.id = 'space-time-btn';
 
-const spaceTimeArtReBtn = document.createElement('div');
-spaceTimeArtReBtn.id = 'spacetime-ar-btn';
-const spaceTimeBtnIcon = document.createElement('img');
-let spaceTimeBtnIconUrl = chrome.runtime.getURL('imgs/clock-b3.png');
-spaceTimeBtnIcon.src = spaceTimeBtnIconUrl;
-spaceTimeBtnIcon.id = 'spacetime-btn-icon'
-spaceTimeArtReBtn.appendChild(spaceTimeBtnIcon);
+const budgetBtn = document.createElement('button');
+budgetBtn.textContent = 'Budget';
+budgetBtn.id = 'budget-btn';
 
-btnMainArContainer.appendChild(spaceTimeArtReBtn);
+const quoteBtn = document.createElement('button');
+quoteBtn.textContent = 'Quotes';
+quoteBtn.id = 'quote-btn';
 
-const budgetArtReBtn = document.createElement('div');
-budgetArtReBtn.id = 'budget-ar-btn';
-const budgetBtnIcon = document.createElement('img');
-let budgetBtnIconUrl = chrome.runtime.getURL('imgs/money-b3.png');
-budgetBtnIcon.src = budgetBtnIconUrl;
-budgetBtnIcon.id = 'budget-btn-icon'
-budgetArtReBtn.appendChild(budgetBtnIcon);
+const overflowBtn = document.createElement('button');
+overflowBtn.textContent = 'Overflow';
+overflowBtn.id = 'overflow-btn';
 
-btnMainArContainer.appendChild(budgetArtReBtn);
+const customBtn = document.createElement('button');
+customBtn.textContent = 'Custom';
+customBtn.id = 'custom-btn';
+customBtn.disabled = true;
 
-const quoteArtReBtn = document.createElement('div');
-quoteArtReBtn.id = 'quote-ar-btn';
-const quoteBtnIcon = document.createElement('img');
-let quoteBtnIconUrl = chrome.runtime.getURL('imgs/sp-bub-b3.png');
-quoteBtnIcon.src = quoteBtnIconUrl;
-quoteBtnIcon.id = 'quote-btn-icon'
-quoteArtReBtn.appendChild(quoteBtnIcon);
+btnContainerLeft.appendChild(goodBtn);
+btnContainerLeft.appendChild(spacetimeBtn);
+btnContainerLeft.appendChild(budgetBtn);
+btnContainerRight.appendChild(quoteBtn);
+btnContainerRight.appendChild(overflowBtn);
+btnContainerRight.appendChild(customBtn);
 
-btnMainArContainer.appendChild(quoteArtReBtn);
+btnMainContainer.appendChild(btnContainerLeft);
+btnMainContainer.appendChild(btnContainerRight);
 
-const overflowArtReBtn = document.createElement('div');
-overflowArtReBtn.id = 'overflow-ar-btn';
-const overflowBtnIcon = document.createElement('img');
-let overflowBtnIconUrl = chrome.runtime.getURL('imgs/trash-b3.png');
-overflowBtnIcon.src = overflowBtnIconUrl;
-overflowBtnIcon.id = 'overflow-btn-icon'
-overflowArtReBtn.appendChild(overflowBtnIcon);
-
-btnMainArContainer.appendChild(overflowArtReBtn);
-
-// const spaceTimeArtReBtn = document.createElement('button');
-// spaceTimeArtReBtn.textContent = 'Space/Time';
-// spaceTimeArtReBtn.id = 'space-time-btn';
-
-// const budgetBtn = document.createElement('button');
-// budgetBtn.textContent = 'Budget';
-// budgetBtn.id = 'budget-btn';
-
-// const quoteBtn = document.createElement('button');
-// quoteBtn.textContent = 'Quotes';
-// quoteBtn.id = 'quote-btn';
-
-// const overflowBtn = document.createElement('button');
-// overflowBtn.textContent = 'Overflow';
-// overflowBtn.id = 'overflow-btn';
-
-// const customBtn = document.createElement('button');
-// customBtn.textContent = 'Custom';
-// customBtn.id = 'custom-btn';
-// customBtn.disabled = true;
-
-// btnContainerLeft.appendChild(goodArtReBtn);
-// btnContainerLeft.appendChild(spaceTimeArtReBtn);
-// btnContainerLeft.appendChild(budgetBtn);
-// btnContainerRight.appendChild(quoteBtn);
-// btnContainerRight.appendChild(overflowBtn);
-// btnContainerRight.appendChild(customBtn);
-
-// btnMainArContainer.appendChild(btnContainerLeft);
-// btnMainArContainer.appendChild(btnContainerRight);
-
-sideBar.appendChild(btnMainArContainer);
+sideBar.appendChild(btnMainContainer);
 
 //create filter display
 const filterDisplay = document.createElement('div');
@@ -819,10 +773,8 @@ filterDisplay.className = 'filter-display';
 
 sideBar.appendChild(filterDisplay);
 
-btnMainArContainer.addEventListener('click', (e) => {
-    console.log(e.target);
-    if (e.target != btnMainArContainer) {
-        console.log('nice');
+btnMainContainer.addEventListener('click', (e) => {
+    if (e.target.type === 'submit') {
         btnStyler(e.target);
         organizeResults(e.target);
     };

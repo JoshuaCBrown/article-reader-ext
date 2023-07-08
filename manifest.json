@@ -11,7 +11,7 @@
     ],
     "web_accessible_resources": [
         {
-            "resources": [ "artreadericon.png" ],
+            "resources": [ "/imgs/*.png" ],
             "matches": [ "<all_urls>" ]
         }
     ],
