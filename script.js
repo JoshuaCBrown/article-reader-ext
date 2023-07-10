@@ -8,6 +8,15 @@
 // & - treat it like 'of' identifier?
 // replace '/' with whitespace
 // comma handler
+// use key press 1-5 to select categories 
+// percentages with % 
+// question marks
+// dashes '-'
+// colons and semicolons ':' and ';' 
+// phone number and email extractor 
+// add footer
+// icon development
+// highlight words in sentences from button selector
 let abbreviationsArr = [
     'MR.',
     'DR.',
@@ -214,7 +223,7 @@ let spaceIdentifiers = [
     'Yard',
     'Place',
     'Downtown'
-]
+];
 
 let timeIdentifiers = [
     'Monday',
@@ -270,6 +279,7 @@ let timeIdentifiers = [
     '2030',
 ];
 
+// I For You Whether I've I'm I'll How Its As
 let wordsToExclude = [
     'The',
     'It',
@@ -352,10 +362,12 @@ function getTextFromArticle (arr) {
 
 
 function identifyQuotes (str) {
-    let quoter = /["“].+?[\S]["”]/gm;
+    let quoter = /^["“].+?[\S]["”]$/gm;
     const quotes = str.match(quoter);
-    console.log(quotes);
-    createQuoteBtns(quotes);
+    if (quotes != null) {
+        console.log(quotes);
+        createQuoteBtns(quotes);
+    };
 };
 
 function createQuoteBtns (myArr) {
@@ -389,7 +401,7 @@ function removeAbbreviations(str) {
     let regExVal = /^([a-z]\.)+$/i
     let cleanArr = [];
     for (let i = 0; i < dirtyArr.length; ++i) {
-        if (abbreviationsArr.includes(dirtyArr[i].toUpperCase()) || regExVal.test(dirtyArr[i])) {
+        if (abbreviationsArr.includes(dirtyArr[i].toUpperCase()) || regExVal.test(dirtyArr[i].toUpperCase())) {
             let cleanAbbreviation = dirtyArr[i].replace(/\.+/g, '');
             cleanArr.push(cleanAbbreviation);
         } else {
@@ -476,8 +488,6 @@ function moneyFinder(myArr) {
     capFinder(cashArr);
 };
 
-
-
 function capFinder (myArr) {
     for (let j = 0; j < myArr.length; ++j) {
         capArr[j] = [];
@@ -555,6 +565,7 @@ function theRemover (myWord) {
 // };
 
 function createBtns (myArr) {
+    let hugeBtnArr = [];
     for (let j = 0; j < myArr.length; ++j) {
         for (let i = 0; i < myArr[j].length; ++i) {
             const newBtn = document.createElement('button');
@@ -566,11 +577,14 @@ function createBtns (myArr) {
         //add class of 'all-btn' to every button
             newBtn.classList.add('all-str-btn');
             newBtn.style.display = 'none';
-            filterDisplay.appendChild(newBtn); 
+            hugeBtnArr.push(newBtn);
+            // filterDisplay.appendChild(newBtn); 
         };
     };
-    // showBtns();
+    btnDuplicateEliminator(hugeBtnArr);
+    console.log(hugeBtnArr);
 };
+    // showBtns();
 
 function btnClass(str) {
     if (/[“"”]/.test(str.charAt(0))) {
@@ -610,6 +624,38 @@ function btnText (str) {
         return str;
     };
 };
+
+function btnDuplicateEliminator(btnArr) {
+    cleanBtnArr = [];
+    let cleanTextArr = [];
+    for (let i = 0; i < btnArr.length; ++i) {
+        let btnText = btnArr[i].textContent;
+        if (cleanTextArr.includes(btnText)) {
+            let btnIndex = cleanTextArr.indexOf(btnText);
+            cleanBtnArr[btnIndex].id += 'br' + btnArr[i].id;
+        } else {
+            cleanBtnArr.push(btnArr[i]);
+            cleanTextArr.push(btnText);
+        }
+    };
+    makeBtnCounter(cleanBtnArr);
+};
+
+function makeBtnCounter(btnArr) {
+    for (let i = 0; i < btnArr.length; ++i) {
+        let myBtnId = btnArr[i].id;
+        let myIdArr = myBtnId.split('br');
+        if (myIdArr.length > 1) {
+            const idCount = document.createElement('div');
+            idCount.className = 'id-counter';
+            idCount.textContent = myIdArr.length;
+            btnArr[i].appendChild(idCount);
+        };
+        cleanBtnIdArr.push(myIdArr);
+        filterDisplay.appendChild(btnArr[i]);
+    }
+    console.log(cleanBtnIdArr);
+}
 
 function organizeResults(myBtn) {
     removeShownBtns();
@@ -659,7 +705,26 @@ function removeShownBtns() {
             indyShownBtn.style.display = 'none';
         });
     };   
-}
+};
+
+function displayBtnSentences (myBtn) {
+    const indexKey = cleanBtnArr.indexOf(myBtn);
+    const myBtnIdArr = cleanBtnIdArr[indexKey];
+    if (myBtnIdArr.length > 1) {
+        if (lastBtnClicked === myBtn && (idCounterVal < (myBtnIdArr.length - 1))) {
+            ++idCounterVal;
+        } else {
+            idCounterVal = 0;
+        }
+        iterationCounter.textContent = (idCounterVal + 1) + '/' + myBtnIdArr.length;
+    } else {
+        idCounterVal = 0;
+        iterationCounter.textContent = '';
+    }
+    let indyIdArr = myBtnIdArr[idCounterVal].split('-');
+    fullSentenceDisplayer.textContent = sentenceArr[indyIdArr[0]];
+    lastBtnClicked = myBtn;
+};
 
 //global variables
 let articleText;
@@ -669,6 +734,10 @@ let wordsInSentencesArr = [];
 let capArr = [];
 let quoteArr = [];
 let controlPanelArr = [];
+let cleanBtnIdArr = [];
+let cleanBtnArr = [];
+let lastBtnClicked;
+let idCounterVal;
 
 //create side panel and widget to show/remove side panel
 const sideBar = document.createElement('div');
@@ -719,6 +788,18 @@ mainIcon.id = 'main-icon';
 
 headerDiv.appendChild(mainIcon);
 sideBar.appendChild(headerDiv);
+
+//create sentence display
+
+const fullSentenceDisplayer = document.createElement('div');
+fullSentenceDisplayer.className = 'full-sentence-displayer';
+sideBar.appendChild(fullSentenceDisplayer); 
+
+// create counter display
+
+const iterationCounter = document.createElement('div');
+iterationCounter.id = 'artre-iteration-counter';
+sideBar.appendChild(iterationCounter);
 
 // create selection buttons 
 
@@ -773,7 +854,7 @@ btnMainArContainer.appendChild(quoteArtReBtn);
 const overflowArtReBtn = document.createElement('div');
 overflowArtReBtn.id = 'overflow-ar-btn';
 const overflowBtnIcon = document.createElement('img');
-let overflowBtnIconUrl = chrome.runtime.getURL('imgs/trash-b3.png');
+let overflowBtnIconUrl = chrome.runtime.getURL('imgs/trash-b2.png');
 overflowBtnIcon.src = overflowBtnIconUrl;
 overflowBtnIcon.id = 'overflow-btn-icon'
 overflowArtReBtn.appendChild(overflowBtnIcon);
@@ -813,23 +894,33 @@ btnMainArContainer.appendChild(overflowArtReBtn);
 
 sideBar.appendChild(btnMainArContainer);
 
-//create filter display
+//create button display
 const filterDisplay = document.createElement('div');
-filterDisplay.className = 'filter-display';
-
+filterDisplay.id = 'filter-displayer-div';
 sideBar.appendChild(filterDisplay);
+
+const artreFooterDiv = document.createElement('div');
+artreFooterDiv.id = 'artre-footer-div';
+sideBar.appendChild(artreFooterDiv);
 
 btnMainArContainer.addEventListener('click', (e) => {
     console.log(e.target);
     if (e.target != btnMainArContainer) {
         console.log('nice');
-        btnStyler(e.target);
-        organizeResults(e.target);
+        btnStyler(e.target.parentElement);
+        organizeResults(e.target.parentElement);
     };
     console.log(e.target.className);
 });
 
+filterDisplay.addEventListener('click', e => {
+    if (e.target.type === 'submit') {
+        displayBtnSentences(e.target);
+    }
+});
+
 const article = document.querySelector('article');
+
 if (article === null) {
     getAllThePs();
 } else {
