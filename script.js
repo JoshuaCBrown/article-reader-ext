@@ -742,26 +742,32 @@ let idCounterVal;
 //create side panel and widget to show/remove side panel
 const sideBar = document.createElement('div');
 sideBar.id = 'side-artre-container';
+const sideBarBgImgAr = document.createElement('img');
+let sideBarImgUrl = chrome.runtime.getURL('imgs/colorspacenewnew.png');
+sideBarBgImgAr.src = sideBarImgUrl;
+sideBarBgImgAr.id = 'artre-bgimg'
+sideBar.appendChild(sideBarBgImgAr);
+sideBar.style.backgroundImage = sideBarBgImgAr;
 document.body.appendChild(sideBar);
 
 const myArtReIcon = document.createElement('img');
 let iconUrl = chrome.runtime.getURL('imgs/artreadericon.png');
 myArtReIcon.src = iconUrl;
-myArtReIcon.id = 'icon';
+myArtReIcon.id = 'artre-icon';
 
 const myWidget = document.createElement('div');
-myWidget.id = 'stickything';
+myWidget.id = 'artre-stickything';
 
 myWidget.appendChild(myArtReIcon);
 
 //event listener on tab click to show side panel
 myWidget.addEventListener('click', () => {
-    if (sideBar.className != 'show-sidebar') {
-        sideBar.className = 'show-sidebar';
-        myWidget.className = 'show-sidebar';
+    if (sideBar.className != 'show-artre-sidebar') {
+        sideBar.className = 'show-artre-sidebar';
+        myWidget.className = 'show-artre-sidebar';
     } else {
-        sideBar.classList.remove('show-sidebar');
-        myWidget.classList.remove('show-sidebar');
+        sideBar.classList.remove('show-artre-sidebar');
+        myWidget.classList.remove('show-artre-sidebar');
     };
 });
 
@@ -781,12 +787,31 @@ console.log(articleText);
 const headerDiv = document.createElement('div');
 headerDiv.className = 'header-div';
 
+const mainIconDiv = document.createElement('div');
+mainIconDiv.id = 'artre-main-icon-div'
 const mainIcon = document.createElement('img');
-let mainIconUrl = chrome.runtime.getURL('imgs/artreadericon.png');
+let mainIconUrl = chrome.runtime.getURL('imgs/artreadericonw.png');
 mainIcon.src = mainIconUrl;
-mainIcon.id = 'main-icon';
+mainIcon.id = 'artre-main-icon';
 
-headerDiv.appendChild(mainIcon);
+const headerTextDiv = document.createElement('div');
+headerTextDiv.id = 'artre-header-text-div';
+
+const headerTextOne = document.createElement('div');
+const headerTextTwo = document.createElement('div');
+headerTextOne.id = 'artre-title-one';
+headerTextTwo.id = 'artre-title-two';
+headerTextOne.textContent = 'ARTICLE';
+headerTextTwo.textContent = 'READER';
+
+headerTextDiv.appendChild(headerTextOne);
+headerTextDiv.appendChild(headerTextTwo);
+
+mainIconDiv.appendChild(mainIcon);
+
+headerDiv.appendChild(mainIconDiv);
+headerDiv.appendChild(headerTextDiv);
+
 sideBar.appendChild(headerDiv);
 
 //create sentence display
@@ -814,7 +839,7 @@ btnMainArContainer.id = 'btn-main-ar-container';
 const goodArtReBtn = document.createElement('div');
 goodArtReBtn.id = 'good-ar-btn';
 const goodBtnIcon = document.createElement('img');
-let goodBtnIconUrl = chrome.runtime.getURL('imgs/check-b3.png');
+let goodBtnIconUrl = chrome.runtime.getURL('imgs/check-b4.png');
 goodBtnIcon.src = goodBtnIconUrl;
 goodBtnIcon.id = 'good-btn-icon'
 goodArtReBtn.appendChild(goodBtnIcon);
@@ -824,7 +849,7 @@ btnMainArContainer.appendChild(goodArtReBtn);
 const spaceTimeArtReBtn = document.createElement('div');
 spaceTimeArtReBtn.id = 'spacetime-ar-btn';
 const spaceTimeBtnIcon = document.createElement('img');
-let spaceTimeBtnIconUrl = chrome.runtime.getURL('imgs/clock-b3.png');
+let spaceTimeBtnIconUrl = chrome.runtime.getURL('imgs/clock-building2.png');
 spaceTimeBtnIcon.src = spaceTimeBtnIconUrl;
 spaceTimeBtnIcon.id = 'spacetime-btn-icon'
 spaceTimeArtReBtn.appendChild(spaceTimeBtnIcon);
@@ -834,7 +859,7 @@ btnMainArContainer.appendChild(spaceTimeArtReBtn);
 const budgetArtReBtn = document.createElement('div');
 budgetArtReBtn.id = 'budget-ar-btn';
 const budgetBtnIcon = document.createElement('img');
-let budgetBtnIconUrl = chrome.runtime.getURL('imgs/money-b3.png');
+let budgetBtnIconUrl = chrome.runtime.getURL('imgs/money-b1.png');
 budgetBtnIcon.src = budgetBtnIconUrl;
 budgetBtnIcon.id = 'budget-btn-icon'
 budgetArtReBtn.appendChild(budgetBtnIcon);
@@ -854,7 +879,7 @@ btnMainArContainer.appendChild(quoteArtReBtn);
 const overflowArtReBtn = document.createElement('div');
 overflowArtReBtn.id = 'overflow-ar-btn';
 const overflowBtnIcon = document.createElement('img');
-let overflowBtnIconUrl = chrome.runtime.getURL('imgs/trash-b2.png');
+let overflowBtnIconUrl = chrome.runtime.getURL('imgs/questionmark-b3.png');
 overflowBtnIcon.src = overflowBtnIconUrl;
 overflowBtnIcon.id = 'overflow-btn-icon'
 overflowArtReBtn.appendChild(overflowBtnIcon);
@@ -901,6 +926,12 @@ sideBar.appendChild(filterDisplay);
 
 const artreFooterDiv = document.createElement('div');
 artreFooterDiv.id = 'artre-footer-div';
+const footerQMarkImg = document.createElement('img');
+let footerImgUrl = chrome.runtime.getURL('imgs/questionmark-b1.png');
+footerQMarkImg.src = footerImgUrl;
+footerQMarkImg.id = 'artre-footer-qmark';
+
+artreFooterDiv.appendChild(footerQMarkImg);
 sideBar.appendChild(artreFooterDiv);
 
 btnMainArContainer.addEventListener('click', (e) => {
