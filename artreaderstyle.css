@@ -10,6 +10,10 @@
     --artre-orange: #F4976C;
     --artre-border-light: #A1C2D1;
 }
+
+/* #side-artre-container div {
+    border: 2px solid orange;
+} */
 /* webkit scrollbar styler*/
 div#filter-displayer-div::-webkit-scrollbar {
     width:10px;
@@ -44,10 +48,6 @@ div.full-sentence-displayer::-webkit-scrollbar-thumb:hover {
     background: #555; 
 }
 
-/* #side-artre-container div {
-    border: 2px solid orange;
-} */
-
 #side-artre-container {
     font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 16px;
@@ -69,10 +69,13 @@ div.full-sentence-displayer::-webkit-scrollbar-thumb:hover {
     background-color: var(--artre-lightcbd-two);
     z-index: 2147483646;
     transition: all .7s;
-    border: 2px solid black;
+    /* border: 2px solid black; */
     /* border-right: none; */
     display: block;
-    box-shadow: inset 0 0 7px 2px var(--artre-storm);
+    /* box-shadow: inset 0 0 7px 2px var(--artre-storm); */
+    box-shadow: inset 0px -2px 4px rgba(0, 0, 0, 0.418), 
+    inset 0 2px 4px white;
+    
     margin-right: 2px;
     /* padding-left: -1rem; */
 }
@@ -229,6 +232,7 @@ div#side-artre-container #filter-displayer-div {
 }
 
 #filter-displayer-div>button {
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     z-index: 2147483647;
     background-color: var(--artre-border-light);
     font-size: 14px;
@@ -239,6 +243,7 @@ div#side-artre-container #filter-displayer-div {
     border-radius: 2px;
     border: none;
     padding: 3px 5px 3px 5px;
+    text-decoration: none;
     font-weight: bold;
 }
 
@@ -282,7 +287,7 @@ div#side-artre-container #filter-displayer-div {
 #side-artre-container .full-sentence-displayer {
     margin-right: 10px;
     margin-left: 10px;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.459);
+    box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.459);
     color: var(--artre-lightcbd-one);
     font-weight: bold;
     overflow-y: auto;
@@ -300,11 +305,21 @@ div#side-artre-container #filter-displayer-div {
 
 #side-artre-container #artre-footer-div {
     z-index: 2147483647;
-    justify-content: stretch;
-    align-content: stretch;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;;
     background: linear-gradient(var(--artre-border-light), var(--artre-storm));
     color: var(--artre-border-light);
     border-top: 1px solid black;
+}
+
+#artre-footer-qmark-div {
+    position: relative;
+    height: 100%;
+}
+
+#artre-footer-qmark-div:hover {
+    background-color: var(--artre-border-light);
 }
 
 #artre-footer-qmark {
@@ -312,6 +327,18 @@ div#side-artre-container #filter-displayer-div {
     height: 100%;
     width: auto; 
 }
+
+#artre-reducedby-div {
+    font-size: 12px;
+    color: black;
+    display: flex;
+    align-items: center;
+}
+
+#filter-displayer-div>button.sig-str-btn {
+    text-decoration: underline;
+}
+
 /* #side-artre-container .btn-container-right, .btn-container-left {
     padding: 2px;
 }

@@ -307,7 +307,7 @@ let wordsToExclude = [
     'In',
 ];
 
-let moneyIdentifier = [
+let moneyIdentifiers = [
     'million',
     'thousand',
     'billion',
@@ -362,11 +362,12 @@ function getTextFromArticle (arr) {
 
 
 function identifyQuotes (str) {
-    let quoter = /^["“].+?[\S]["”]$/gm;
+    let quoter = /["“].+?[\S]["”]/gm;
     const quotes = str.match(quoter);
     if (quotes != null) {
         console.log(quotes);
-        createQuoteBtns(quotes);
+        quoteBtnArr = Array.from(quotes);
+        createQuoteBtns(quoteBtnArr);
     };
 };
 
@@ -380,7 +381,11 @@ function createQuoteBtns (myArr) {
         newBtn.className = btnClass(myArr[i]);
     //add class of 'all-btn' to every button
         newBtn.classList.add('all-str-btn');
+        newBtn.style.display = 'none';
+        quoteRealBtnArr.push(newBtn);
+        filterDisplay.appendChild(newBtn);
     };
+
     // showBtns();
 };
 
@@ -477,14 +482,13 @@ function moneyFinder(myArr) {
         cashArr[j] = [];
         for (let i = 0; i < myArr[j].length; ++i) {
             let currentWord = myArr[j][i];
-            if (isDollarAmount(currentWord) && (cashArr[j][i + 1] != undefined && moneyIdentifiers.includes(cashArr[j][i + 1].toLowerCase()))) {
+            if (isDollarAmount(currentWord) && (myArr[j][i + 1] != undefined && moneyIdentifiers.includes(myArr[j][i + 1].toLowerCase()))) {
                 currentWord += ' ' + myArr[j][i + 1];
                 myArr[j].splice((i + 1), 1);
             };
             cashArr[j][i] = currentWord;
         };
     };
-    console.log(cashArr);
     capFinder(cashArr);
 };
 
@@ -515,8 +519,6 @@ function capFinder (myArr) {
             //currentWord = 'Example Case' in ['Example Case', 'lowercase']
                     currentWord += ' ' + nextWord;
                     myArr[j].splice((i+1), 1);
-            //testing with console log
-                    console.log(currentWord);
                 };
             //end of WHILE statement
             //IF 
@@ -533,13 +535,11 @@ function capFinder (myArr) {
     };
     //test in console
     createBtns(capArr);
-    console.log(capArr);
     //pass capArray to makeBtns function
     // makeBtns(capArray);
 };
 
 function isNumber(str) {
-    console.log(/^\d+[%]?$/.test(str));
     return /^\d+[.]?([\d]+)?[%]?$/.test(str);
 };
 
@@ -582,7 +582,6 @@ function createBtns (myArr) {
         };
     };
     btnDuplicateEliminator(hugeBtnArr);
-    console.log(hugeBtnArr);
 };
     // showBtns();
 
@@ -601,14 +600,11 @@ function btnClass(str) {
     };
     let wordSplit = str.split(' ');
     for (let l = 0; l < wordSplit.length; ++l) {
-        console.log(wordSplit[l]);
         if (sigIdentifiers.includes(wordSplit[l]) === true) {
-            console.log(wordSplit[l]);
             return 'sig-str-btn';
         };
     };
     for (let h = 0; h < wordSplit.length; ++h) {
-        console.log(wordSplit[h]);
         if (timeIdentifiers.includes(wordSplit[h]) || (spaceIdentifiers.includes(wordSplit[h]) || isNumber(wordSplit[h]))) {
             return 'spacetime-str-btn';
         }; 
@@ -639,6 +635,7 @@ function btnDuplicateEliminator(btnArr) {
         }
     };
     makeBtnCounter(cleanBtnArr);
+    doMath(cleanBtnArr);
 };
 
 function makeBtnCounter(btnArr) {
@@ -654,10 +651,35 @@ function makeBtnCounter(btnArr) {
         cleanBtnIdArr.push(myIdArr);
         filterDisplay.appendChild(btnArr[i]);
     }
-    console.log(cleanBtnIdArr);
 }
 
+function doMath(myArr) {
+    newAllBtnArr = cleanBtnArr.concat(quoteRealBtnArr);
+    let btnWordString = newAllBtnArr[0].textContent;
+    const articleWordCount = articleText.split(' ');
+    for (let i = 1; i < newAllBtnArr.length; ++i) {
+        btnWordString += ' ' + newAllBtnArr[i].textContent;
+    };
+    const btnWordCount = btnWordString.split(' ');
+    const percentageOfBtnText = btnWordCount.length/articleWordCount.length;
+    console.log(percentageOfBtnText);
+    const percentageReduction = (1 - percentageOfBtnText) * 100;
+    console.log(percentageReduction);
+    let mathResult = percentageReduction.toFixed(1);
+    console.log(mathResult);
+    showStats(mathResult);
+};
+
+function showStats(pct) {
+    reducedByDiv.textContent = 'Article reduced by ' + pct + '%';
+}
+
+//end of function organization
+
+//here's what click event triggers
+
 function organizeResults(myBtn) {
+    console.log(quoteBtnArr)
     removeShownBtns();
     console.log('heyo');
     controlPanelArr = [
@@ -673,6 +695,7 @@ function organizeResults(myBtn) {
     const budgetStrBtns = document.querySelectorAll('.budget-str-btn');
     const quoteStrBtns = document.querySelectorAll('.quote-str-btn');
     const overflowStrBtns = document.querySelectorAll('.overflow-str-btn');
+    console.log(quoteStrBtns);
 
     const liveSigBtnsArray = Array.from(sigStrBtns);
     const liveGoodBtnsArr = Array.from(goodStrBtns);
@@ -685,7 +708,7 @@ function organizeResults(myBtn) {
         quoteStrBtns,
         overflowStrBtns
     ];
-
+    console.log(quoteStrBtns);
     let index = controlPanelArr.indexOf(myBtn);
 
     console.log(allOfMyFilteredBtns);
@@ -708,21 +731,26 @@ function removeShownBtns() {
 };
 
 function displayBtnSentences (myBtn) {
-    const indexKey = cleanBtnArr.indexOf(myBtn);
-    const myBtnIdArr = cleanBtnIdArr[indexKey];
-    if (myBtnIdArr.length > 1) {
-        if (lastBtnClicked === myBtn && (idCounterVal < (myBtnIdArr.length - 1))) {
-            ++idCounterVal;
+    if (myBtn.classList.contains('quote-str-btn')) {
+        let quoteIdArr = myBtn.id.split('-');
+        fullSentenceDisplayer.textContent = quoteBtnArr[quoteIdArr[1]];
+    } else {
+        const indexKey = newAllBtnArr.indexOf(myBtn);
+        const myBtnIdArr = cleanBtnIdArr[indexKey];
+        if (myBtnIdArr.length > 1) {
+            if (lastBtnClicked === myBtn && (idCounterVal < (myBtnIdArr.length - 1))) {
+                ++idCounterVal;
+            } else {
+                idCounterVal = 0;
+            }
+            iterationCounter.textContent = (idCounterVal + 1) + '/' + myBtnIdArr.length;
         } else {
             idCounterVal = 0;
+            iterationCounter.textContent = '';
         }
-        iterationCounter.textContent = (idCounterVal + 1) + '/' + myBtnIdArr.length;
-    } else {
-        idCounterVal = 0;
-        iterationCounter.textContent = '';
-    }
-    let indyIdArr = myBtnIdArr[idCounterVal].split('-');
-    fullSentenceDisplayer.textContent = sentenceArr[indyIdArr[0]];
+        let indyIdArr = myBtnIdArr[idCounterVal].split('-');
+        fullSentenceDisplayer.textContent = sentenceArr[indyIdArr[0]];
+    };
     lastBtnClicked = myBtn;
 };
 
@@ -736,8 +764,11 @@ let quoteArr = [];
 let controlPanelArr = [];
 let cleanBtnIdArr = [];
 let cleanBtnArr = [];
+let quoteBtnArr = [];
+let quoteRealBtnArr = [];
 let lastBtnClicked;
 let idCounterVal;
+let newAllBtnArr = [];
 
 //create side panel and widget to show/remove side panel
 const sideBar = document.createElement('div');
@@ -926,12 +957,23 @@ sideBar.appendChild(filterDisplay);
 
 const artreFooterDiv = document.createElement('div');
 artreFooterDiv.id = 'artre-footer-div';
+
+const footerQMarkDiv = document.createElement('div');
+footerQMarkDiv.id = 'artre-footer-qmark-div';
+
 const footerQMarkImg = document.createElement('img');
 let footerImgUrl = chrome.runtime.getURL('imgs/questionmark-b1.png');
 footerQMarkImg.src = footerImgUrl;
 footerQMarkImg.id = 'artre-footer-qmark';
 
-artreFooterDiv.appendChild(footerQMarkImg);
+
+const reducedByDiv = document.createElement('div');
+reducedByDiv.id = 'artre-reducedby-div';
+
+artreFooterDiv.appendChild(reducedByDiv);
+
+footerQMarkDiv.appendChild(footerQMarkImg);
+artreFooterDiv.appendChild(footerQMarkDiv);
 sideBar.appendChild(artreFooterDiv);
 
 btnMainArContainer.addEventListener('click', (e) => {
@@ -949,6 +991,10 @@ filterDisplay.addEventListener('click', e => {
         displayBtnSentences(e.target);
     }
 });
+
+footerQMarkDiv.addEventListener('click', () => {
+    showHelpDoc();
+})
 
 const article = document.querySelector('article');
 
