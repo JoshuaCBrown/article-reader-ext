@@ -6,14 +6,15 @@
       {
        "matches":["<all_urls>"],
        "js":["script.js"],
-       "css": ["artreaderstyle.css"]
+       "css":["artreaderstyle.css"]
       }
     ],
+    "host_permissions": ["<all_urls>"],
     "web_accessible_resources": [
-        {
-            "resources": [ "/imgs/*.png" ],
-            "matches": [ "<all_urls>" ]
-        }
+      {
+        "resources": [ "/imgs/*.png" ],
+        "matches": [ "<all_urls>" ]
+      }
     ],
     "action": {
       "default_icon": "babysfirsticon.png",

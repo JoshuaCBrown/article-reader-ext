@@ -325,6 +325,7 @@ let moneyIdentifiers = [
 
 //button style function
 function btnStyler (clickedBtn) {
+    helpDocDiv.className = 'artre-help-hide';
     const btnArr = btnMainArContainer.querySelectorAll('div');
     btnArr.forEach((indyBtn) => {
         indyBtn.classList.remove('pressed');
@@ -749,9 +750,36 @@ function displayBtnSentences (myBtn) {
             iterationCounter.textContent = '';
         }
         let indyIdArr = myBtnIdArr[idCounterVal].split('-');
+        currentSentenceIndex = indyIdArr[0];
         fullSentenceDisplayer.textContent = sentenceArr[indyIdArr[0]];
     };
     lastBtnClicked = myBtn;
+};
+
+function showHelpDoc() {
+    if (helpDocDiv.className === 'artre-help-show') {
+        helpDocDiv.className = 'artre-help-hide'
+        console.log('style null');
+    } else {
+        helpDocDiv.className = 'artre-help-show';
+        console.log('style none');
+    }
+};
+
+
+function readSentences(num) {
+    let newIndex;
+    if (num === 'right') {
+        newIndex = currentSentenceIndex + 1;
+    };
+    if (num === 'left') {
+        newIndex = currentSentenceIndex - 1;
+    }
+    if (newIndex > -1 && newIndex < sentenceArr.length) {
+        console.log('good');
+        fullSentenceDisplayer.textContent = sentenceArr[newIndex]
+        currentSentenceIndex = newIndex;
+    }
 };
 
 //global variables
@@ -769,6 +797,7 @@ let quoteRealBtnArr = [];
 let lastBtnClicked;
 let idCounterVal;
 let newAllBtnArr = [];
+let currentSentenceIndex;
 
 //create side panel and widget to show/remove side panel
 const sideBar = document.createElement('div');
@@ -821,27 +850,27 @@ headerDiv.className = 'header-div';
 const mainIconDiv = document.createElement('div');
 mainIconDiv.id = 'artre-main-icon-div'
 const mainIcon = document.createElement('img');
-let mainIconUrl = chrome.runtime.getURL('imgs/artreadericonw.png');
+let mainIconUrl = chrome.runtime.getURL('imgs/artreaderheader.png');
 mainIcon.src = mainIconUrl;
 mainIcon.id = 'artre-main-icon';
 
-const headerTextDiv = document.createElement('div');
-headerTextDiv.id = 'artre-header-text-div';
+// const headerTextDiv = document.createElement('div');
+// headerTextDiv.id = 'artre-header-text-div';
 
-const headerTextOne = document.createElement('div');
-const headerTextTwo = document.createElement('div');
-headerTextOne.id = 'artre-title-one';
-headerTextTwo.id = 'artre-title-two';
-headerTextOne.textContent = 'ARTICLE';
-headerTextTwo.textContent = 'READER';
+// const headerTextOne = document.createElement('div');
+// const headerTextTwo = document.createElement('div');
+// headerTextOne.id = 'artre-title-one';
+// headerTextTwo.id = 'artre-title-two';
+// headerTextOne.textContent = 'ARTICLE';
+// headerTextTwo.textContent = 'READER';
 
-headerTextDiv.appendChild(headerTextOne);
-headerTextDiv.appendChild(headerTextTwo);
+// headerTextDiv.appendChild(headerTextOne);
+// headerTextDiv.appendChild(headerTextTwo);
 
 mainIconDiv.appendChild(mainIcon);
 
 headerDiv.appendChild(mainIconDiv);
-headerDiv.appendChild(headerTextDiv);
+// headerDiv.appendChild(headerTextDiv);
 
 sideBar.appendChild(headerDiv);
 
@@ -853,9 +882,37 @@ sideBar.appendChild(fullSentenceDisplayer);
 
 // create counter display
 
+const controlCounter = document.createElement('div');
+controlCounter.id = 'artre-control-counter';
+
+const leftArrow = document.createElement('div');
+leftArrow.id = 'artre-leftarrow-div';
+
+const rightArrow = document.createElement('div');
+rightArrow.id = 'artre-rightarrow-div'
+
+// const leftArrowImg = document.createElement('img');
+// const leftArrowSrc = chrome.runtime.getURL('imgs/arrowwhite.png');
+// leftArrowImg.src = leftArrowSrc;
+// leftArrowImg.id = 'artre-leftarrow';
+// leftArrow.appendChild(leftArrowImg);
+
+// const rightArrowImg = document.createElement('img');
+// const rightArrowSrc = chrome.runtime.getURL('imgs/arrowwhite.png');
+// rightArrowImg.src = rightArrowSrc;
+// rightArrowImg.id = 'artre-rightarrow';
+// rightArrow.appendChild(rightArrowImg);
+
 const iterationCounter = document.createElement('div');
 iterationCounter.id = 'artre-iteration-counter';
-sideBar.appendChild(iterationCounter);
+
+controlCounter.appendChild(leftArrow);
+controlCounter.appendChild(iterationCounter);
+controlCounter.appendChild(rightArrow);
+
+
+
+sideBar.appendChild(controlCounter);
 
 // create selection buttons 
 
@@ -976,6 +1033,17 @@ footerQMarkDiv.appendChild(footerQMarkImg);
 artreFooterDiv.appendChild(footerQMarkDiv);
 sideBar.appendChild(artreFooterDiv);
 
+const helpDocDiv = document.createElement('div');
+helpDocDiv.id = 'artre-help-doc-div';
+const helpDocImg = document.createElement('img');
+let helpDocUrl = chrome.runtime.getURL('imgs/artrehelpdoc.png');
+helpDocImg.src = helpDocUrl;
+helpDocImg.id = 'artre-help-doc-img';
+helpDocDiv.className = 'artre-help-hide';
+
+helpDocDiv.appendChild(helpDocImg);
+filterDisplay.appendChild(helpDocDiv);
+
 btnMainArContainer.addEventListener('click', (e) => {
     console.log(e.target);
     if (e.target != btnMainArContainer) {
@@ -993,8 +1061,24 @@ filterDisplay.addEventListener('click', e => {
 });
 
 footerQMarkDiv.addEventListener('click', () => {
+    removeShownBtns();
+    const btnArr = btnMainArContainer.querySelectorAll('div');
+    btnArr.forEach((indyBtn) => {
+        indyBtn.classList.remove('pressed');
+    });
     showHelpDoc();
+    console.log(helpDocDiv);
+    console.log(helpDocImg);
 })
+
+// leftArrowImg.addEventListener('click', () => {
+//     readSentences('left');
+// })
+
+// rightArrowImg.addEventListener('click', () => {
+//     readSentences('right');
+// })
+
 
 const article = document.querySelector('article');
 
@@ -1003,3 +1087,4 @@ if (article === null) {
 } else {
     getArticlePs();
 };
+
