@@ -251,6 +251,8 @@ div#side-artre-container #filter-displayer-div {
     padding: 3px 5px 3px 5px !important;
     text-decoration: none !important;
     font-weight: bold !important;
+    color: black !important;
+    text-transform: none !important;
 }
 
 #artre-bgimg {
