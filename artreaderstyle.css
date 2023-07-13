@@ -49,7 +49,7 @@ div.full-sentence-displayer::-webkit-scrollbar-thumb:hover {
 }
 
 #side-artre-container {
-    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif !important;
+    font-family: Arial, Helvetica, sans-serif !important;
     font-size: 16px !important;
     color: var(--artre-dark) !important;
 }
@@ -238,7 +238,7 @@ div#side-artre-container #filter-displayer-div {
 }
 
 #filter-displayer-div>button {
-    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif !important;
+    font-family: Arial, Helvetica, sans-serif !important;
     z-index: 2147483647 !important;
     background-color: var(--artre-border-light) !important;
     font-size: 14px !important;
